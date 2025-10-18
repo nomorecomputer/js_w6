@@ -27,6 +27,7 @@ const constants = {
 
 export function InitHandler() {
   registryAddCard();
+  registryModalClick();
   setFilters();
   initCards(constants.selectAllValue);
   initLoadBtns([
@@ -98,9 +99,11 @@ function addNewTicket() {
   data.tickets.push(newTicket);
   initCards(constants.selectAllValue);
   const successMsgElem = document.getElementById(constants.addCardSucessMsgId);
-  successMsgElem.style.display = "block";
+  // successMsgElem.style.display = "block";
+  successMsgElem.classList.add("active");
   setTimeout(function () {
-    successMsgElem.style.display = "none";
+    // successMsgElem.style.display = "none";
+    successMsgElem.classList.remove("active");
     addTicketFormElem.reset();
     addTicketFormElem
       .querySelectorAll(`.${constants.validator_Constants.alertDivClass}`)
@@ -136,16 +139,17 @@ function load_ticket_json(level, url) {
       const successMsgElem = document.getElementById(
         constants.loadDataSuccessMsgId
       );
-      successMsgElem.style.display = "block";
-      successMsgElem.innerText = successMsgElem.innerText.replace("XXX", level);
+      const msgElem = successMsgElem.querySelector(".modal > h2");
+      // successMsgElem.style.display = "block";
+      successMsgElem.classList.add("active");
+      msgElem.textContent = msgElem.textContent.replace("XXX", level);
       document.getElementById(constants.areaSelectId).value =
         constants.selectAllValue;
       setTimeout(function () {
-        successMsgElem.style.display = "none";
-        successMsgElem.innerText = successMsgElem.innerText.replace(
-          level,
-          "XXX"
-        );
+        // successMsgElem.style.display = "none";
+        successMsgElem.classList.remove("active");
+
+        msgElem.textContent = msgElem.textContent.replace(level, "XXX");
       }, 3000);
     })
     .catch(function (error) {
@@ -156,4 +160,16 @@ function load_ticket_json(level, url) {
 function handleFilterNotFound(resultCount) {
   const msgArea = document.getElementById(constants.canotFindAreaId);
   msgArea.style.display = resultCount == 0 ? "block" : "none";
+}
+
+function registryModalClick() {
+  const elems = [
+    document.getElementById(constants.addCardSucessMsgId),
+    document.getElementById(constants.loadDataSuccessMsgId),
+  ];
+  elems.forEach((elem) =>
+    elem.addEventListener("click", (e) => {
+      e.target.classList.remove("active");
+    })
+  );
 }

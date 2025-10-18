@@ -148,12 +148,11 @@
           value="新增套票"
           id="addNewCard"
         />
-           <input
-          type="button"
-          class="addTicket-btn success-msg-btn btn"
-          value="套票新增成功"
-          id="addNewCardSuccess"
-        />
+        <div class="modal-overlay" id="addNewCardSuccess">
+          <div class="modal">
+            <h2>套票新增成功！</h2>
+          </div>
+        </div>
       </form>
     </section>
     <section class="main-content">
@@ -161,9 +160,11 @@
         <button class="addTicket-btn btn" id="loadLV1">Load LV1 Tickets</button>
         <button class="addTicket-btn btn" id="loadLV2">Load LV2 Tickets</button>
       </div>
-      <section class="load-ticket-area">
-        <button class="addTicket-btn success-msg-btn btn" id="loadDataSuccess">下載 XXX 資料成功！</button>
-      </section>
+      <div class="modal-overlay" id="loadDataSuccess">
+         <div class="modal">
+            <h2>下載 XXX 資料成功！</h2>
+          </div> 
+      </div>
       <!-- 搜尋區 -->
       <div class="search-area">
         <select name="" class="regionSearch" id="searchByArea">
