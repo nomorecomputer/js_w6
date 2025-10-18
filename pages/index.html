@@ -34,22 +34,16 @@
               maxlength="12"
             />
           </div>
-          <div class="alert-message">
-            <p
-              id="ticketName-message"
-              data-message="套票名稱"
-              style="display: none"
-            >
-              <i class="fas fa-exclamation-circle"></i>
-              <span>必填，長度小於12</span>
-            </p>
+          <div class="alert-message hidden">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>必填，長度小於12</span>
           </div>
         </div>
         <div class="form-group">
           <div class="addTicket-input">
             <label for="ticketImgUrl">圖片網址</label>
             <input
-              type="text"
+              type="url"
               id="ticketImgUrl"
               placeholder="請填寫圖片網址"
               name="圖片網址"
@@ -57,15 +51,9 @@
               required
             />
           </div>
-          <div class="alert-message">
-            <p
-              id="ticketImgUrl-message"
-              data-message="圖片網址"
-              style="display: none"
-            >
-              <i class="fas fa-exclamation-circle"></i>
-              <span>必填!</span>
-            </p>
+          <div class="alert-message hidden">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>必填，且需符合url型態</span>
           </div>
         </div>
         <div class="form-group">
@@ -75,15 +63,9 @@
               <!-- replace by js here  -->
             </select>
           </div>
-          <div class="alert-message">
-            <p
-              id="ticketRegion-message"
-              data-message="景點地區"
-              style="display: none"
-            >
-              <i class="fas fa-exclamation-circle"></i>
-              <span>必選!</span>
-            </p>
+          <div class="alert-message hidden">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>必選!</span>
           </div>
         </div>
         <div class="form-group">
@@ -99,15 +81,9 @@
               min="0"
             />
           </div>
-          <div class="alert-message">
-            <p
-              id="ticketPrice-message"
-              data-message="套票金額"
-              style="display: none"
-            >
-              <i class="fas fa-exclamation-circle"></i>
-              <span>必選！</span>
-            </p>
+          <div class="alert-message hidden">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>必填、選：大於等於0</span>
           </div>
         </div>
         <div class="form-group">
@@ -123,14 +99,9 @@
               min="1"
             />
           </div>
-          <div class="alert-message">
-            <p
-              id="ticketNum-message"
-              data-message="套票組數"
-              style="display: none"
-            >
+          <div class="alert-message hidden">
               <i class="fas fa-exclamation-circle"></i>
-              <span>必選，最少1套!</span>
+              <span>必填、選：最少1套</span>
             </p>
           </div>
         </div>
@@ -148,14 +119,9 @@
               max="10"
             />
           </div>
-          <div class="alert-message">
-            <p
-              id="ticketRate-message"
-              data-message="套票星級"
-              style="display: none"
-            >
-              <i class="fas fa-exclamation-circle"></i>
-              <span>必選，星級：1~10</span>
+          <div class="alert-message hidden">
+                          <i class="fas fa-exclamation-circle"></i>
+              <span>必填、選：星級：1~10</span>
             </p>
           </div>
         </div>
@@ -171,15 +137,9 @@
               maxlength="100"
             ></textarea>
           </div>
-          <div class="alert-message">
-            <p
-              id="ticketDescription-message"
-              data-message="套票描述"
-              style="display: none"
-            >
-              <i class="fas fa-exclamation-circle"></i>
+          <div class="alert-message hidden">
+            <i class="fas fa-exclamation-circle"></i>
               <span>必填、套票描述 (限 100 字)</span>
-            </p>
           </div>
         </div>
         <input
@@ -188,6 +148,12 @@
           value="新增套票"
           id="addNewCard"
         />
+           <input
+          type="button"
+          class="addTicket-btn success-msg-btn btn"
+          value="套票新增成功"
+          id="addNewCardSuccess"
+        />
       </form>
     </section>
     <section class="main-content">
@@ -195,6 +161,9 @@
         <button class="addTicket-btn btn" id="loadLV1">Load LV1 Tickets</button>
         <button class="addTicket-btn btn" id="loadLV2">Load LV2 Tickets</button>
       </div>
+      <section class="load-ticket-area">
+        <button class="addTicket-btn success-msg-btn btn" id="loadDataSuccess">下載 XXX 資料成功！</button>
+      </section>
       <!-- 搜尋區 -->
       <div class="search-area">
         <select name="" class="regionSearch" id="searchByArea">

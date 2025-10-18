@@ -35,4 +35,4 @@ export const createCardHtml = (card) => `
 export const createAreaOptionHtml = (area) => `
 <option value="${area.value}">${area.text}</option>
 `;
-export const AreaDefaultOptionHtml = `<option value="地區搜尋" disabled selected hidden>地區搜尋</option>`;
+export const AreaDefaultOptionHtml = `<option value="" disabled selected hidden>地區搜尋</option>`;

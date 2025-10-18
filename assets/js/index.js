@@ -1,14 +1,20 @@
 import * as data from "/assets/js/data";
-import { simpleFrontValidator } from "/assets/js/simpleFrontValidator";
+import { registerFrontValidate } from "/assets/js/frontValidator";
 import * as UI_Template from "/assets/js/htmlTemplate";
 
 const constants = {
   areaSelectId: "searchByArea",
   areaSelectInAddId: "ticketRegion",
   cardContainerId: "ticketCards",
+  addCardSucessMsgId: "addNewCardSuccess",
+  loadDataSuccessMsgId: "loadDataSuccess",
   canotFindAreaId: "cantFind-area",
   filterResultId: "searchResult-text",
-  addNewCardId: "addNewCard",
+  validator_Constants: {
+    inputFormId: "newTicketForm",
+    alertDivClass: "alert-message",
+    addNewCardId: "addNewCard",
+  },
   newTicketFormId: "newTicketForm",
   selectAllValue: "全部",
   loadJson1BtnId: "loadLV1",
@@ -68,26 +74,43 @@ function initCards(filtBy) {
 }
 
 function registryAddCard() {
-  const addBtnElem = document.getElementById(constants.addNewCardId);
+  const addBtnElem = document.getElementById(
+    constants.validator_Constants.addNewCardId
+  );
   addBtnElem.addEventListener("click", addNewTicket);
+  registerFrontValidate(constants.validator_Constants);
 }
 
 function addNewTicket() {
   const addTicketFormElem = document.getElementById(constants.newTicketFormId);
+  if (!addTicketFormElem.reportValidity()) return;
+
+  const formData = new FormData(addTicketFormElem);
+  const inputElems = addTicketFormElem.querySelectorAll("[name][property]");
   const newTicket = {};
   newTicket.id = data.tickets.length;
-  const valicateErrorMsg = simpleFrontValidator(addTicketFormElem, newTicket);
 
-  if (valicateErrorMsg != "") {
-    alert("=====  新增失敗！  =====\n\n" + valicateErrorMsg);
-  } else {
-    data.tickets.push(newTicket);
-    initCards(constants.selectAllValue);
-    alert("新增成功！");
+  inputElems.forEach((inputElem) => {
+    const fieldName = inputElem.getAttribute("name");
+    const fieldProperty = inputElem.getAttribute("property");
+    newTicket[fieldProperty] = formData.get(fieldName);
+  });
+  data.tickets.push(newTicket);
+  initCards(constants.selectAllValue);
+  const successMsgElem = document.getElementById(constants.addCardSucessMsgId);
+  successMsgElem.style.display = "block";
+  setTimeout(function () {
+    successMsgElem.style.display = "none";
     addTicketFormElem.reset();
-    document.getElementById(constants.areaSelectId).value =
-      constants.selectAllValue;
-  }
+    addTicketFormElem
+      .querySelectorAll(`.${constants.validator_Constants.alertDivClass}`)
+      .forEach((alertDiv) => {
+        alertDiv.classList.toggle("hidden", true);
+      });
+  }, 3000);
+
+  document.getElementById(constants.areaSelectId).value =
+    constants.selectAllValue;
 }
 
 function initLoadBtns(btns) {
@@ -110,9 +133,20 @@ function load_ticket_json(level, url) {
         level === "LV1" ? response.data : response.data.data
       );
       initCards(constants.selectAllValue);
-      alert(`載入 JSON ${level} 資料成功！`);
+      const successMsgElem = document.getElementById(
+        constants.loadDataSuccessMsgId
+      );
+      successMsgElem.style.display = "block";
+      successMsgElem.innerText = successMsgElem.innerText.replace("XXX", level);
       document.getElementById(constants.areaSelectId).value =
         constants.selectAllValue;
+      setTimeout(function () {
+        successMsgElem.style.display = "none";
+        successMsgElem.innerText = successMsgElem.innerText.replace(
+          level,
+          "XXX"
+        );
+      }, 3000);
     })
     .catch(function (error) {
       alert(`載入 JSON ${level} 失敗：${error}`);

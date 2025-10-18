@@ -180,6 +180,10 @@ body {
   margin-top: 3px;
   color: #b21c01;
   font-size: 0.85rem;
+  display: block;
+  &.hidden {
+    display: none;
+  }
 }
 
 .alert-message p {
@@ -202,6 +206,21 @@ body {
   align-self: flex-end;
   font-size: 1.25rem;
   padding: 10px 40px;
+  &:disabled {
+    /* 視覺效果 */
+    opacity: 0.6; /* 讓它看起來灰一些 */
+    cursor: not-allowed; /* 將滑鼠游標設為禁止符號 */
+    pointer-events: none; /* 雖然 disabled 已經阻止點擊，但這個屬性可以增強阻斷性 */
+    background-color: #ccc; /* 改變背景顏色 */
+    color: #666; /* 改變文字顏色 */
+  }
+}
+
+.success-msg-btn {
+  background-color: green !important;
+  color: white !important;
+  margin-top: 20px;
+  display: none;
 }
 
 @media (max-width: 576px) {
