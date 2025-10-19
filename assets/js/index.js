@@ -25,6 +25,7 @@ const constants = {
     "https://raw.githubusercontent.com/hexschool/js-training/main/travelApi.json",
 };
 
+export let timerId;
 export function InitHandler() {
   registryAddCard();
   registryModalClick();
@@ -98,12 +99,13 @@ function addNewTicket() {
   });
   data.tickets.push(newTicket);
   initCards(constants.selectAllValue);
-  const successMsgElem = document.getElementById(constants.addCardSucessMsgId);
-  // successMsgElem.style.display = "block";
-  successMsgElem.classList.add("active");
-  setTimeout(function () {
-    // successMsgElem.style.display = "none";
-    successMsgElem.classList.remove("active");
+  const modal_overlay_Elem = document.getElementById(
+    constants.addCardSucessMsgId
+  );
+  modal_overlay_Elem.classList.add("active");
+
+  timerId = setTimeout(function () {
+    modal_overlay_Elem.classList.remove("active");
     addTicketFormElem.reset();
     addTicketFormElem
       .querySelectorAll(`.${constants.validator_Constants.alertDivClass}`)
@@ -127,8 +129,11 @@ function initLoadBtns(btns) {
 }
 
 function load_ticket_json(level, url) {
+  const alert_overlap_Elem = document.getElementById(
+    constants.loadDataSuccessMsgId
+  );
   axios
-    .get(url)
+    .get(url, { timeout: 5000 })
     .then(function (response) {
       data.tickets.length = 0;
       Array.prototype.push.apply(
@@ -136,24 +141,26 @@ function load_ticket_json(level, url) {
         level === "LV1" ? response.data : response.data.data
       );
       initCards(constants.selectAllValue);
-      const successMsgElem = document.getElementById(
-        constants.loadDataSuccessMsgId
-      );
-      const msgElem = successMsgElem.querySelector(".modal > h2");
-      // successMsgElem.style.display = "block";
-      successMsgElem.classList.add("active");
-      msgElem.textContent = msgElem.textContent.replace("XXX", level);
+
+      const msgElem = alert_overlap_Elem.querySelector(".modal .alt-msg-text");
+
+      alert_overlap_Elem.classList.add("active");
+      msgElem.textContent = msgElem.textContent.replace(/LV1|LV2|XXX/, level);
       document.getElementById(constants.areaSelectId).value =
         constants.selectAllValue;
-      setTimeout(function () {
-        // successMsgElem.style.display = "none";
-        successMsgElem.classList.remove("active");
-
-        msgElem.textContent = msgElem.textContent.replace(level, "XXX");
+      timerId = setTimeout(function () {
+        alert_overlap_Elem.classList.remove("active");
       }, 3000);
     })
     .catch(function (error) {
-      alert(`載入 JSON ${level} 失敗：${error}`);
+      alert_overlap_Elem.classList.remove("active");
+      let errMsg = "";
+      if (error.stack) errMsg += error.stack;
+      else if (error.response) errMsg += error.response;
+      else if (error.request) errMst += error.request;
+      else errMsg += error;
+      // alert(`載入 JSON ${level} 失敗：${errMsg}`);
+      alert(`載入 JSON ${level} 失敗；請檢察網路連線、或URL ${url}是否正確`);
     });
 }
 
@@ -164,12 +171,13 @@ function handleFilterNotFound(resultCount) {
 
 function registryModalClick() {
   const elems = [
-    document.getElementById(constants.addCardSucessMsgId),
-    document.getElementById(constants.loadDataSuccessMsgId),
+    document.querySelector(`#${constants.addCardSucessMsgId} .modal`),
+    document.querySelector(`#${constants.loadDataSuccessMsgId} .modal`),
   ];
   elems.forEach((elem) =>
     elem.addEventListener("click", (e) => {
-      e.target.classList.remove("active");
+      clearTimeout(timerId);
+      elem.parentElement.classList.remove("active");
     })
   );
 }
