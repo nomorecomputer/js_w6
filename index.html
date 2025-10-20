@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script type="module" crossorigin src="/js_w6/assets/index-BMxMFueC.js"></script>
+    <script type="module" crossorigin src="/js_w6/assets/index-Crvx0arL.js"></script>
     <link rel="stylesheet" crossorigin href="/js_w6/assets/index-yvwr3nJU.css">
   </head>
   <body>
@@ -150,22 +150,12 @@
           value="新增套票"
           id="addNewCard"
         />
-        <div class="modal-overlay" id="addNewCardSuccess">
-          <div class="modal">
-            <h2>套票新增成功！</h2>
-          </div>
-        </div>
       </form>
     </section>
     <section class="main-content">
       <div class="load-ticket-area">
         <button class="addTicket-btn btn" id="loadLV1">Load LV1 Tickets</button>
         <button class="addTicket-btn btn" id="loadLV2">Load LV2 Tickets</button>
-      </div>
-      <div class="modal-overlay" id="loadDataSuccess">
-         <div class="modal">
-            <h2 class=" alt-msg-text">下載 XXX 資料成功！</h2>
-          </div> 
       </div>
       <!-- 搜尋區 -->
       <div class="search-area">
@@ -187,6 +177,11 @@
         />
       </div>
     </section>
+    <div class="modal-overlay" id="success-modal-overlay">
+       <div class="modal">
+            <h2 class=" alt-msg-text"></h2>
+        </div> 
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
 </html>
