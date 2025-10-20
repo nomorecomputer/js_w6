@@ -7,7 +7,6 @@ const constants = {
   areaSelectInAddId: "ticketRegion",
   cardContainerId: "ticketCards",
   addCardSucessMsgId: "addNewCardSuccess",
-  loadDataSuccessMsgId: "loadDataSuccess",
   canotFindAreaId: "cantFind-area",
   filterResultId: "searchResult-text",
   validator_Constants: {
@@ -23,12 +22,13 @@ const constants = {
     "https://raw.githubusercontent.com/hexschool/js-training/main/travelAPI-lv1.json",
   json2Url:
     "https://raw.githubusercontent.com/hexschool/js-training/main/travelApi.json",
+  modalOverlayId: "success-modal-overlay",
 };
 
-export let timerId;
+let modalTimerId;
 export function InitHandler() {
   registryAddCard();
-  registryModalClick();
+  registryModalMsg();
   setFilters();
   initCards(constants.selectAllValue);
   initLoadBtns([
@@ -102,17 +102,14 @@ function addNewTicket() {
   const modal_overlay_Elem = document.getElementById(
     constants.addCardSucessMsgId
   );
-  modal_overlay_Elem.classList.add("active");
-
-  timerId = setTimeout(function () {
-    modal_overlay_Elem.classList.remove("active");
+  modal_msg_show("套票新增成功！", undefined, () => {
     addTicketFormElem.reset();
     addTicketFormElem
       .querySelectorAll(`.${constants.validator_Constants.alertDivClass}`)
       .forEach((alertDiv) => {
         alertDiv.classList.toggle("hidden", true);
       });
-  }, 3000);
+  });
 
   document.getElementById(constants.areaSelectId).value =
     constants.selectAllValue;
@@ -128,12 +125,9 @@ function initLoadBtns(btns) {
   });
 }
 
-function load_ticket_json(level, url) {
-  const alert_overlap_Elem = document.getElementById(
-    constants.loadDataSuccessMsgId
-  );
+function load_ticket_json(level, url, responseTimeout = 5000) {
   axios
-    .get(url, { timeout: 5000 })
+    .get(url, { timeout: responseTimeout })
     .then(function (response) {
       data.tickets.length = 0;
       Array.prototype.push.apply(
@@ -142,24 +136,19 @@ function load_ticket_json(level, url) {
       );
       initCards(constants.selectAllValue);
 
-      const msgElem = alert_overlap_Elem.querySelector(".modal .alt-msg-text");
-
-      alert_overlap_Elem.classList.add("active");
-      msgElem.textContent = msgElem.textContent.replace(/LV1|LV2|XXX/, level);
+      const successMsg = `下載 ${level} 資料，成功載入`;
+      modal_msg_show(successMsg);
       document.getElementById(constants.areaSelectId).value =
         constants.selectAllValue;
-      timerId = setTimeout(function () {
-        alert_overlap_Elem.classList.remove("active");
-      }, 3000);
     })
     .catch(function (error) {
-      alert_overlap_Elem.classList.remove("active");
-      let errMsg = "";
+      modal_msg_close();
+
+      let errMsg = error.message;
       if (error.stack) errMsg += error.stack;
-      else if (error.response) errMsg += error.response;
-      else if (error.request) errMst += error.request;
-      else errMsg += error;
-      // alert(`載入 JSON ${level} 失敗：${errMsg}`);
+      if (error.response) errMsg += error.response;
+      if (error.request) errMst += error.request;
+
       alert(`載入 JSON ${level} 失敗；請檢察網路連線、或URL ${url}是否正確`);
     });
 }
@@ -169,15 +158,26 @@ function handleFilterNotFound(resultCount) {
   msgArea.style.display = resultCount == 0 ? "block" : "none";
 }
 
-function registryModalClick() {
-  const elems = [
-    document.querySelector(`#${constants.addCardSucessMsgId} .modal`),
-    document.querySelector(`#${constants.loadDataSuccessMsgId} .modal`),
-  ];
-  elems.forEach((elem) =>
-    elem.addEventListener("click", (e) => {
-      clearTimeout(timerId);
-      elem.parentElement.classList.remove("active");
-    })
+function registryModalMsg() {
+  const modalElem = document.querySelector(
+    `#${constants.modalOverlayId} .modal`
   );
+  modalElem.addEventListener("click", () => {
+    clearTimeout(modalTimerId);
+    modalElem.parentElement.classList.remove("active");
+  });
+}
+function modal_msg_show(msg, timeout = 3000, aftershowHandler = null) {
+  const modalOverlayElem = document.getElementById(constants.modalOverlayId);
+  modalOverlayElem.querySelector(".alt-msg-text").textContent = msg;
+  modalOverlayElem.classList.add("active");
+  modalTimerId = setTimeout(function () {
+    modalOverlayElem.classList.remove("active");
+    if (aftershowHandler != null) aftershowHandler();
+  }, timeout);
+}
+
+function modal_msg_close(afterCloseHandler = null) {
+  const modalOverlayElem = document.getElementById(constants.modalOverlayId);
+  modalOverlayElem.classList.remove("active");
 }

@@ -148,22 +148,12 @@
           value="新增套票"
           id="addNewCard"
         />
-        <div class="modal-overlay" id="addNewCardSuccess">
-          <div class="modal">
-            <h2>套票新增成功！</h2>
-          </div>
-        </div>
       </form>
     </section>
     <section class="main-content">
       <div class="load-ticket-area">
         <button class="addTicket-btn btn" id="loadLV1">Load LV1 Tickets</button>
         <button class="addTicket-btn btn" id="loadLV2">Load LV2 Tickets</button>
-      </div>
-      <div class="modal-overlay" id="loadDataSuccess">
-         <div class="modal">
-            <h2 class=" alt-msg-text">下載 XXX 資料成功！</h2>
-          </div> 
       </div>
       <!-- 搜尋區 -->
       <div class="search-area">
@@ -185,6 +175,11 @@
         />
       </div>
     </section>
+    <div class="modal-overlay" id="success-modal-overlay">
+       <div class="modal">
+            <h2 class=" alt-msg-text"></h2>
+        </div> 
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="../main.js"></script>
   </body>
